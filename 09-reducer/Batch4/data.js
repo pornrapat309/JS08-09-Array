@@ -1,6 +1,7 @@
-// 1. จำนวน transaction ทั้งหมด
+// 1. จำนวน transaction ทั้งหมด  
 // 2. จำนวนลูกค้าที่แตกต่างกัน มีใครบ้าง แต่ละคนซื้อไปยอดรวมกันเท่าไหร่ กี่เครื่อง
 // 3. ยอดขายทั้งหมด (หลังหัก discount)
+// ยอดขาย 1270728.1 
 // 4. สินค้าที่ถูกขายมี่กี่ยี่ห้อ แต่ละยี่ห้อขายไปกี่เครื่อง และ ยอดรวมเท่าไหร่
 // 5. สินค้าที่ถูกขายมีกี่รุ่นในแต่ละยี่ห้อ แต่ละรุ่นขายไปกี่เครื่อง และ ยอดรวมเท่าไหร่
 // 6. หายอดรวมของการจ่ายแต่ละประเภท (Cash, Credit, ...)
@@ -677,3 +678,151 @@ const sales = [
     type: 'Cash'
   }
 ];
+
+// 1.
+// console.log(sales.length);
+
+// 2.
+
+// const countCustomer = sales.reduce((acc, salesObj) => {
+//   if (!acc[salesObj.customer]) {
+//       acc[salesObj.customer] = [];
+//     }
+//     acc[salesObj.customer].push(salesObj.customer);
+//     return acc;
+// }, {});
+
+// console.log(countCustomer);
+
+// 3.
+
+// const calSales = sales.reduce((acc, salesObj) => {
+//   const price = salesObj.product.unitPrice
+//   const discount = salesObj.discount ? salesObj.discount : 0;
+//   const calPrice = price * (1 - discount)
+//   return acc + calPrice;
+// }, 0)
+// console.log(calSales);
+
+// 4. 
+
+// const salesByName = sales.reduce((acc, salesObj) => {
+//     const brandPhone = salesObj.product.name;
+//     const unitSold = 1;
+//     const discount = salesObj.discount ? salesObj.discount : 0;
+//     const calPrice = salesObj.product.unitPrice * (1 - discount);
+//     if (!acc[brandPhone]) {
+//       acc[brandPhone] = {
+//         unitSold: unitSold,
+//         calPrice: calPrice,
+//       };
+//     } else {
+//       acc[brandPhone].unitSold += unitSold;
+//       acc[brandPhone].calPrice += calPrice;
+//     }
+//     return acc;
+// },{})
+// console.log(salesByName);
+
+
+// 5.
+
+// const salesByModel = sales.reduce((acc, salesObj) => {
+//     const brandPhone = salesObj.product.name;
+//     const brandModel = salesObj.product.model;
+//     const unitSold = 1;
+//     const discount = salesObj.discount ? salesObj.discount : 0;
+//     const calPrice = salesObj.product.unitPrice * (1 - discount);
+
+//     if (!acc[brandPhone]) {
+//       acc[brandPhone] = {};
+//     }
+
+//     if (!acc[brandPhone][brandModel]) {
+//       acc[brandPhone][brandModel] = {
+//         unitSold: unitSold,
+//         calPrice: calPrice,
+//       };
+//     } else {
+//       acc[brandPhone][brandModel].unitSold += unitSold;
+//       acc[brandPhone][brandModel].calPrice += calPrice;
+//     }
+//     return acc;
+// },{})
+// console.log(salesByModel);
+
+
+// 6. 
+
+// const salesByType = sales.reduce((acc, salesObj) => {
+//     const paymentType = salesObj.type;
+//     const discount = salesObj.discount ? salesObj.discount : 0;
+//     const calPrice = salesObj.product.unitPrice * (1 - discount);
+
+//     if (!acc[paymentType]) {
+//       acc[paymentType] = 0;
+//     }
+//     acc[paymentType] += calPrice;
+//     return acc
+// },{})
+// console.log(salesByType);
+
+
+// 7. 
+
+// const salesByDate = sales.reduce((acc, salesObj) => {
+//   const salesDate = salesObj.saleDate;
+//   const discount = salesObj.discount ? salesObj.discount : 0;
+//   const calPrice = salesObj.product.unitPrice * (1 - discount);
+
+//   if (!acc[salesDate]) {
+//     acc[salesDate] = 0;
+//   }
+//   acc[salesDate] += calPrice;
+//   return acc;
+// },{})
+// console.log(salesByDate);
+
+
+// 8.
+
+// const salesByModel = sales.reduce((acc, salesObj) => {
+//   const modelName = salesObj.product.model
+//   const discount = salesObj.discount ? salesObj.discount : 0;
+//   const calPrice = salesObj.product.unitPrice * (1 - discount);
+
+//   if (!acc[modelName]) {
+//     acc[modelName] = 0;
+//   }
+//   acc[modelName] += calPrice;
+//   return acc;
+// },{})
+
+// const compareMax = [];
+// for (let key in salesByModel) {
+//   compareMax.push({model: key, totalSales: salesByModel[key]});
+// }
+// compareMax.sort((a,b) => b.totalSales - a.totalSales);
+// console.log(compareMax);
+
+
+// 9.
+
+const salesByCustomer = sales.reduce((acc, salesObj) => {
+  const customerName = salesObj.customer;
+  const discount = salesObj.discount ? salesObj.discount : 0;
+  const calPrice = salesObj.product.unitPrice * (1 - discount);
+  
+  if (!acc[customerName]) {
+    acc[customerName] = 0;
+  }
+  acc[customerName] += calPrice
+  return acc
+},{});
+
+const compareMax = [];
+for (let key in salesByCustomer) {
+  compareMax.push({nameCustomer: key, totalSales: salesByCustomer[key]});
+}
+compareMax.sort((a,b) => b.totalSales - a.totalSales);
+console.log(compareMax);
